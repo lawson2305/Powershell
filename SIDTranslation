@@ -1,0 +1,8 @@
+#
+# Translate SID to Friendly Name
+# https://blogs.msmvps.com/ad/blog/2010/10/07/using-powershell-to-resolve-sids-to-friendly-names-2/
+#
+$objSID = New-Object System.Security.Principal.SecurityIdentifier `
+("ENTERSID")
+$objUser = $objSID.Translate( [System.Security.Principal.NTAccount])
+$objUser.Value
