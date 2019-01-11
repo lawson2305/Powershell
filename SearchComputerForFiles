@@ -1,0 +1,34 @@
+#
+# Scan machines for file
+# Beta v0.1
+#
+#Define OU's of Computers to Scan or create an array of computers named $OU
+$xxx0 = "DNofOUforComputersToScan"
+$xxx1 = "DNofOUforComputersToScan"
+$OU = $xxx0, $xxx1
+
+$computers = Foreach ($OUs in $OU)
+{
+Get-ADComputer -Filter * -SearchBase $OUs
+}
+
+
+$extensions = '*.exe*', '*.dll*'
+#Get-Content C:\computers.txt | % {
+$Output = $computers.name | % {
+  $ComputerName = $_
+# $dst stores the found files using teh copy-item command below
+ # $dst = "\\ComputerName\c$\temp\dealply\$ComputerName"
+  #$src = "\\$ComputerName\c$\Program Files\dealply",
+  #       "\\$ComputerName\c$\Program Files (x86)\dealply"
+$src = "c:\Program Files\dealply",
+         "c:\Program Files (x86)\dealply"
+
+
+# New-Item -ItemType Directory $dst
+
+  invoke-command -computername $_ {Get-Childitem $src -Include $extensions -Recurse -Force | `
+    #Copy-Item -Destination $dst\
+    Select-Object @{n='Computer';Expression={$ComputerName}}, FileDescription, OriginalFilename, FileVersion}
+} 
+$Output | Export-Csv -NoTypeInformation -path "c:\temp\dealply\filesearch.csv"
