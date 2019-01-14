@@ -4,7 +4,8 @@ $AdminCount =
 
 foreach ($count in $AdminCount)
 { $usr = get-ADUser $count
-$usr | Set-ADObject -clear admincount
+#$usr | Set-ADObject -clear admincount
+$usr | Set-Aduser -Replace @{adminCount=0}
 Write-Host "AdminCount: "$usr.name" Cleared"
 $NULL = DSACLS $count  /P:N
 Write-Host "Inherited: "$usr.name" Set"
