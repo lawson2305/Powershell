@@ -1,0 +1,16 @@
+$OU = "DN of OU",
+"DN of OU",
+"DN of OU"
+
+$Serv =  Foreach ($OUS in $ou)
+ {
+ Get-ADComputer -Filter * -SearchBase $OUS
+ }
+ $credential = Get-Credential
+ $output = Foreach ($servs in $serv)
+ {
+ Write-Host $SERVS
+ #Invoke-Command Get-NetFirewallProfile -ALL
+ #netsh -r $servs.name advfirewall show allprofiles
+ Invoke-Command -ComputerName $servs.name {Get-NetFirewallProfile -All} -credential $credential
+ } $output | Select-Object Name,Enabled,pscomputername | Export-Csv -NoTypeInformation -Path C:\users\jlawson\Desktop\firewall.csv
