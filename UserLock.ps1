@@ -1,0 +1,1 @@
+get-aduser -filter {displayname -like "Name*"} -properties * | Select Name, LockedOut, @{N='PasswordLastSet'; E={[DateTime]::FromFileTime($_.pwdlastset)}}, @{N='LastLogonTimeStamp'; E={[DateTime]::FromFileTime($_.lastlogontimestamp)}}
